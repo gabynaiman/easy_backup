@@ -1,22 +1,22 @@
 ### DSL Example
 
 ``` rb
-EasyBackup.config :analyst_lab do
+EasyBackup.config :demo_backup do
 
-  guard PostgreSQL do
+  save PostgreSQL do
     host 'localhost'
-    database 'analyst_lab'
-    username 'postgres'
+    database 'db_production'
+    username 'user_prod'
     password 'password'
   end
 
-  guard FileSystem do
-    folder 'c:/analyst_lab/repository'
-    folder 'c:/temp/xxx'
+  save FileSystem do
+    folder 'c:/resources'
+    file 'c:/data/file.txt'
   end
 
-  store_in FileSystem do
-    folder "c:/backups/analyst_lab/#{Time.now.to_s}"
+  into FileSystem do
+    folder "c:/backups/#{Time.now.to_s}"
   end
 
   every Day do

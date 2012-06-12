@@ -10,78 +10,78 @@ describe 'Specification' do
 
   context Configuration do
 
-    it 'Guard file system' do
+    it 'Save file system' do
       config = Configuration.new
 
-      config.guards.should be_empty
+      config.resources.should be_empty
 
-      config.guard FileSystem do
+      config.save FileSystem do
         folder 'c:/folder1'
         file 'c:/folder2/file.txt'
       end
 
-      config.guard FileSystem do
+      config.save FileSystem do
         folder 'c:/folder3'
         folder 'c:/folder4'
         folder 'c:/folder5'
       end
 
-      config.guards.should have(2).items
+      config.resources.should have(2).items
 
-      config.guards[0].should be_a FileSystem
-      config.guards[0].folders.should have(1).items
-      config.guards[0].folders.should include 'c:/folder1'
-      config.guards[0].files.should have(1).items
-      config.guards[0].files.should include 'c:/folder2/file.txt'
+      config.resources[0].should be_a FileSystem
+      config.resources[0].folders.should have(1).items
+      config.resources[0].folders.should include 'c:/folder1'
+      config.resources[0].files.should have(1).items
+      config.resources[0].files.should include 'c:/folder2/file.txt'
 
-      config.guards[1].should be_a FileSystem
-      config.guards[1].folders.should have(3).items
-      config.guards[1].folders.should include 'c:/folder3'
-      config.guards[1].folders.should include 'c:/folder4'
-      config.guards[1].folders.should include 'c:/folder5'
+      config.resources[1].should be_a FileSystem
+      config.resources[1].folders.should have(3).items
+      config.resources[1].folders.should include 'c:/folder3'
+      config.resources[1].folders.should include 'c:/folder4'
+      config.resources[1].folders.should include 'c:/folder5'
     end
 
-    it 'Guard postgre sql' do
+    it 'Save postgre sql' do
       config = Configuration.new
 
-      config.guards.should be_empty
+      config.resources.should be_empty
 
-      config.guard PostgreSQL do
+      config.save PostgreSQL do
         host '192.168.0.0'
         database 'db0'
         username 'user0'
         password 'password0'
       end
 
-      config.guard PostgreSQL do
+      config.save PostgreSQL do
         host '192.168.0.1'
         database 'db1'
         username 'user1'
         password 'password1'
       end
 
-      config.guards.should have(2).items
+      config.resources.should have(2).items
 
       (0..1).each do |i|
-        config.guards[i].should be_a PostgreSQL
-        config.guards[i].host.should eq "192.168.0.#{i}"
-        config.guards[i].database.should eq "db#{i}"
-        config.guards[i].username.should eq "user#{i}"
-        config.guards[i].password.should eq "password#{i}"
+        config.resources[i].should be_a PostgreSQL
+        config.resources[i].host.should eq "192.168.0.#{i}"
+        config.resources[i].database.should eq "db#{i}"
+        config.resources[i].username.should eq "user#{i}"
+        config.resources[i].password.should eq "password#{i}"
       end
 
     end
 
-    it 'Store in file system' do
+    it 'In file system' do
       config = Configuration.new
 
       config.storages.should be_empty
 
-      config.store_in FileSystem do
+      config.into FileSystem do
         folder 'c:/backup'
       end
 
-      config.store_in FileSystem do
+      config.into FileSystem do
         folder 'c:/other_backup'
       end
 

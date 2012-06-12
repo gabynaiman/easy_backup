@@ -14,18 +14,18 @@ describe 'Specification' do
       EasyBackup.configurations.should be_empty
 
       EasyBackup.config :test_backup do
-        guard PostgreSQL do
+        save PostgreSQL do
           host 'localhost'
           database 'test_db'
           username 'user'
           password 'password'
         end
 
-        guard FileSystem do
+        save FileSystem do
           folder 'c:/data'
         end
 
-        store_in FileSystem do
+        into FileSystem do
           folder 'c:/backup'
         end
 
