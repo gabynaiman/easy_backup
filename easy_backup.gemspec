@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Gabriel Naiman"]
   s.email       = ["gabynaiman@gmail.com"]
   s.homepage    = ""
-  s.summary     = "Ease DSL to program backups"
-  s.description = "Ease DSL to program backups"
+  s.summary     = "Easy DSL to program backups"
+  s.description = "Easy DSL to program backups"
 
   s.rubyforge_project = "easy_backup"
 
