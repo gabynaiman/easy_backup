@@ -3,13 +3,13 @@
 ``` rb
 backup :analyst_lab do
 
-  include Pg do
+  guard Pg do
     database 'analyst_lab'
     username 'postgres'
     password 'password'
   end
 
-  include FileSystem do
+  guard FileSystem do
     folder 'c:/analyst_lab/repository'
     folder 'c:/temp/xxx'
   end
