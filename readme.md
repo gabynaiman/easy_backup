@@ -16,7 +16,7 @@ EasyBackup.config :demo_backup do
   end
 
   into FileSystem do
-    folder "c:/backups/#{Time.now.to_s}"
+    folder "c:/backups/#{Time.now.strftime('%Y%m%d%H%M%S')}"
   end
 
   every Day do
