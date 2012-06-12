@@ -1,5 +1,8 @@
-require "easy_backup/version"
+require 'easy_backup/version'
+require 'easy_backup/configuration'
 
-module EasyBackup
+require 'easy_backup/adapter/file_system'
 
-end
+require 'easy_backup/adapter/db/postgre_sql'
+
+require 'easy_backup/adapter/frequency/day'

@@ -1,9 +1,10 @@
 ### DSL Example
 
 ``` rb
-backup :analyst_lab do
+EasyBackup.config :analyst_lab do
 
   guard Pg do
+    host 'localhost'
     database 'analyst_lab'
     username 'postgres'
     password 'password'
