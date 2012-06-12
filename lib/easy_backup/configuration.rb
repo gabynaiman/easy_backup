@@ -2,10 +2,11 @@ module EasyBackup
   class Configuration
     attr_reader :guards, :storages, :frequencies
 
-    def initialize
+    def initialize(&block)
       @guards = []
       @storages = []
       @frequencies = []
+      instance_eval &block if block_given?
     end
 
     def guard(adapter_class, &block)
