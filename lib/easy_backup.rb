@@ -12,6 +12,10 @@ module EasyBackup
     @@configurations ||= {}
   end
 
+  def self.[](name)
+    configurations[name]
+  end
+
   def self.config(name, &block)
     configurations[name] = Configuration.new
     configurations[name].instance_eval &block if block_given?

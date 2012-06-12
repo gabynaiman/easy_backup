@@ -33,7 +33,7 @@ describe EasyBackup do
     end
 
     EasyBackup.configurations.should have_key :test_backup
-    EasyBackup.configurations[:test_backup].should be_a Configuration
+    EasyBackup[:test_backup].should be_a Configuration
   end
 
 end
