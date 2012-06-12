@@ -3,7 +3,7 @@
 ``` rb
 EasyBackup.config :analyst_lab do
 
-  guard Pg do
+  guard PostgreSQL do
     host 'localhost'
     database 'analyst_lab'
     username 'postgres'
