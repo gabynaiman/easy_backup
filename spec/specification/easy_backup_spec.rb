@@ -11,7 +11,7 @@ describe EasyBackup, '-> Specification' do
   it 'Configure a backup' do
     EasyBackup.configurations.should be_empty
 
-    EasyBackup.config :test_backup do
+    EasyBackup.backup :test_backup do
       save PostgreSQL do
         host 'localhost'
         database 'test_db'
@@ -31,6 +31,13 @@ describe EasyBackup, '-> Specification' do
         at '22:30'
       end
     end
+
+    EasyBackup.configurations.should have_key :test_backup
+    EasyBackup[:test_backup].should be_a Configuration
+  end
+
+  it 'Configure from file' do
+    EasyBackup.load "#{File.dirname(__FILE__)}/../files/config/backup_config.rb"
 
     EasyBackup.configurations.should have_key :test_backup
     EasyBackup[:test_backup].should be_a Configuration

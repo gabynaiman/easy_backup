@@ -1,7 +1,7 @@
 ### DSL Example
 
 ``` rb
-EasyBackup.config :demo_backup do
+backup :demo_backup do
 
   save PostgreSQL do
     host     'localhost'
