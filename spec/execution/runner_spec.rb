@@ -87,4 +87,20 @@ describe Runner, '-> Execution' do
     FileUtils.rm_rf backup_path
   end
 
+  it 'Backup a file to sftp' do
+    config = Configuration.new do
+      save FileSystem do
+        file "#{DATA_PATH}/sample.json"
+      end
+      into SFTP do
+        host '10.16.229.132'
+        username 'keepcon_backup'
+        password 'WNzxIMPwIuXGqV'
+        folder "test/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
+      end
+    end
+
+    Runner.run config
+  end
+
 end

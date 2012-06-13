@@ -20,6 +20,13 @@ backup :demo_backup do
     folder "c:/backups/#{Time.now.strftime('%Y%m%d%H%M%S')}"
   end
 
+  into SFTP do
+    host     'remote'
+    username 'user_sftp'
+    password 'password'
+    folder   "backups/#{Time.now.strftime('%Y%m%d%H%M%S')}"
+  end
+
   every Day do
     at '03:00:00'
   end

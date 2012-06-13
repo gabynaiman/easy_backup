@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'rubyzip'
+  s.add_dependency 'net-sftp'
 
   s.add_development_dependency 'sequel'
   s.add_development_dependency 'pg'
