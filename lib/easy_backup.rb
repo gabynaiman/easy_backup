@@ -1,3 +1,5 @@
+require 'logger'
+
 require 'easy_backup/version'
 require 'easy_backup/configuration'
 require 'easy_backup/runner'
@@ -18,6 +20,14 @@ module EasyBackup
   def self.config(name, &block)
     configurations[name] = Configuration.new
     configurations[name].instance_eval &block if block_given?
+  end
+
+  def self.logger
+    @@logger ||= Logger.new($stdout)
+  end
+
+  def self.logger=(logger)
+    @@logger = logger
   end
 
 end

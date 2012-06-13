@@ -33,8 +33,7 @@ module EasyBackup
               #TODO: Zip dump_file
               storages.each { |s| s.save dump_file }
             else
-              #TODO: Log error e.readlines.join
-              $stderr.puts e.readlines.join
+              EasyBackup.logger.error e.readlines.join
             end
           end
 
