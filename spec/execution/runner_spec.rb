@@ -3,6 +3,7 @@ require 'easy_backup'
 require 'JSON'
 require 'yaml'
 require 'sequel'
+require 'zip/zip'
 
 include EasyBackup
 include EasyBackup::Adapter
@@ -10,7 +11,7 @@ include EasyBackup::Adapter::Db
 include EasyBackup::Adapter::Frequency
 
 DATA_PATH = "#{File.dirname(__FILE__)}/files/data"
-BACKUP_PATH = "#{File.dirname(__FILE__)}/files/backup"
+BACKUP_PATH = "#{ENV['tmp'].gsub('\\', '/')}/easy_backup/test/backups"
 
 describe Runner, '-> Execution' do
 
@@ -77,8 +78,10 @@ describe Runner, '-> Execution' do
 
     Runner.run config
 
-    Dir["#{backup_path}/#{db['database']}_*.sql"].should have(1).items
-    File.open(Dir["#{backup_path}/#{db['database']}_*.sql"].first, 'r') { |f| f.readlines.join }.should include 'PostgreSQL database dump'
+    Dir["#{backup_path}/#{db['database']}_*.zip"].should have(1).items
+    Zip::ZipFile.foreach(Dir["#{backup_path}/#{db['database']}_*.zip"].first) do |entry|
+      entry.get_input_stream.read.should include 'PostgreSQL database dump'
+    end
 
     PostgreSQLHelper.drop_db
     FileUtils.rm_rf backup_path

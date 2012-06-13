@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.add_dependency 'rubyzip'
+
   s.add_development_dependency 'sequel'
   s.add_development_dependency 'pg'
   s.add_development_dependency "rspec"
