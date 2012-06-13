@@ -25,7 +25,6 @@ module EasyBackup
       def save(resource)
         folders.each do |folder|
           FileUtils.mkpath folder unless Dir.exist? folder
-          puts resource
           if Dir.exist? resource
             FileUtils.cp_r resource, "#{folder}/#{File.basename(resource)}"
           else

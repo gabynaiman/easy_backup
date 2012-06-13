@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'easy_backup'
 require 'JSON'
+require 'yaml'
+require 'sequel'
 
 include EasyBackup
 include EasyBackup::Adapter
@@ -50,11 +52,34 @@ describe 'Execution' do
       path = "#{config.storages.first.folders.first}/txt"
       (1..2).each do |i|
         file = "#{path}/#{i}/text#{i}.txt"
-        puts file
         File.exist?(file).should be_true
         File.open(file, 'r') { |f| f.gets.should eq "Text file #{i}" }
       end
 
+      FileUtils.rm_rf config.storages.first.folders.first
+    end
+
+    pending 'Backup PostgreSQL to file system' do
+      PostgreSQLHelper.create_db
+      db = PostgreSQLHelper.configuration
+
+      config = Configuration.new do
+        save PostgreSQL do
+          host db['host']
+          database db['database']
+          username db['username']
+          password db['password']
+        end
+        into FileSystem do
+          folder "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
+        end
+      end
+
+      Runner.run config
+
+      #TODO: Check backup results
+
+      PostgreSQLHelper.drop_db
       FileUtils.rm_rf config.storages.first.folders.first
     end
 
