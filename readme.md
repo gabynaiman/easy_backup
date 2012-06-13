@@ -4,7 +4,8 @@
 EasyBackup.config :demo_backup do
 
   save PostgreSQL do
-    host 'localhost'
+    host     'localhost'
+    port     5432
     database 'db_production'
     username 'user_prod'
     password 'password'

@@ -12,77 +12,76 @@ include EasyBackup::Adapter::Frequency
 DATA_PATH = "#{File.dirname(__FILE__)}/files/data"
 BACKUP_PATH = "#{File.dirname(__FILE__)}/files/backup"
 
-describe 'Execution' do
+describe Runner, '-> Execution' do
 
-  context Runner do
-
-    it 'Backup a file to file system' do
-      config = Configuration.new do
-        save FileSystem do
-          file "#{DATA_PATH}/sample.json"
-        end
-        into FileSystem do
-          folder "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
-        end
+  it 'Backup a file to file system' do
+    config = Configuration.new do
+      save FileSystem do
+        file "#{DATA_PATH}/sample.json"
       end
+      into FileSystem do
+        folder "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
+      end
+    end
 
-      Runner.run config
+    Runner.run config
 
-      file = "#{config.storages.first.folders.first}/sample.json"
+    file = "#{config.storages.first.folders.first}/sample.json"
+    File.exist?(file).should be_true
+    data = File.open(file, 'r') { |f| JSON.parse f.readlines.join }
+    data['id'].should be 1234
+    data['name'].should eq 'sample'
+
+    FileUtils.rm_rf config.storages.first.folders.first
+  end
+
+  it 'Backup folder to file system' do
+    config = Configuration.new do
+      save FileSystem do
+        folder "#{DATA_PATH}/txt"
+      end
+      into FileSystem do
+        folder "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
+      end
+    end
+
+    Runner.run config
+
+    path = "#{config.storages.first.folders.first}/txt"
+    (1..2).each do |i|
+      file = "#{path}/#{i}/text#{i}.txt"
       File.exist?(file).should be_true
-      data = File.open(file, 'r') { |f| JSON.parse f.readlines.join }
-      data['id'].should be 1234
-      data['name'].should eq 'sample'
-
-      FileUtils.rm_rf config.storages.first.folders.first
+      File.open(file, 'r') { |f| f.gets.should eq "Text file #{i}" }
     end
 
-    it 'Backup folder to file system' do
-      config = Configuration.new do
-        save FileSystem do
-          folder "#{DATA_PATH}/txt"
-        end
-        into FileSystem do
-          folder "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
-        end
+    FileUtils.rm_rf config.storages.first.folders.first
+  end
+
+  it 'Backup PostgreSQL to file system' do
+    PostgreSQLHelper.create_db
+    db = PostgreSQLHelper.configuration
+    backup_path = "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
+
+    config = Configuration.new do
+      save PostgreSQL do
+        host db['host']
+        database db['database']
+        port db['port']
+        username db['username']
+        password db['password']
       end
-
-      Runner.run config
-
-      path = "#{config.storages.first.folders.first}/txt"
-      (1..2).each do |i|
-        file = "#{path}/#{i}/text#{i}.txt"
-        File.exist?(file).should be_true
-        File.open(file, 'r') { |f| f.gets.should eq "Text file #{i}" }
+      into FileSystem do
+        folder backup_path
       end
-
-      FileUtils.rm_rf config.storages.first.folders.first
     end
 
-    pending 'Backup PostgreSQL to file system' do
-      PostgreSQLHelper.create_db
-      db = PostgreSQLHelper.configuration
+    Runner.run config
 
-      config = Configuration.new do
-        save PostgreSQL do
-          host db['host']
-          database db['database']
-          username db['username']
-          password db['password']
-        end
-        into FileSystem do
-          folder "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
-        end
-      end
+    Dir["#{backup_path}/#{db['database']}_*.sql"].should have(1).items
+    File.open(Dir["#{backup_path}/#{db['database']}_*.sql"].first, 'r') { |f| f.readlines.join }.should include 'PostgreSQL database dump'
 
-      Runner.run config
-
-      #TODO: Check backup results
-
-      PostgreSQLHelper.drop_db
-      FileUtils.rm_rf config.storages.first.folders.first
-    end
-
+    PostgreSQLHelper.drop_db
+    FileUtils.rm_rf backup_path
   end
 
 end
