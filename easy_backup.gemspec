@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = EasyBackup::VERSION
   s.authors     = ["Gabriel Naiman"]
   s.email       = ["gabynaiman@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/gabynaiman/easy_backup"
   s.summary     = "Easy DSL to program backups"
   s.description = "Easy DSL to program backups"
 
