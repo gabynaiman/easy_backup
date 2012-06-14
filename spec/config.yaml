@@ -1,0 +1,11 @@
+postgresql:
+  host: localhost
+  port: 5432
+  database: easy_backup_db
+  username: postgres
+  password: password
+
+sftp:
+  host: 10.16.229.132
+  username: keepcon_backup
+  password: WNzxIMPwIuXGqV

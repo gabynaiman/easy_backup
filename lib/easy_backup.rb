@@ -9,6 +9,8 @@ require 'easy_backup/adapter/sftp'
 require 'easy_backup/adapter/db/postgre_sql'
 require 'easy_backup/adapter/frequency/day'
 
+require 'easy_backup/extension/net_sftp_session'
+
 module EasyBackup
   include EasyBackup::Adapter
   include EasyBackup::Adapter::Db

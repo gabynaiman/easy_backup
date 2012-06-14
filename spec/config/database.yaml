@@ -1,6 +1,0 @@
-postgresql:
-  host: localhost
-  port: 5432
-  database: easy_backup_db
-  username: postgres
-  password: password

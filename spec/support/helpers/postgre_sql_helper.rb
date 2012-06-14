@@ -1,17 +1,10 @@
 module PostgreSQLHelper
-  CONFIG_FILE = "#{File.dirname(__FILE__)}/../../config/database.yaml"
 
   def self.configuration
     if block_given?
-      yield YAML.load_file(CONFIG_FILE)['postgresql']
+      yield ConfigHelper.get 'postgresql'
     else
-      YAML.load_file(CONFIG_FILE)['postgresql']
-    end
-  end
-
-  def self.connection
-    configuration do |c|
-      Sequel.connect("postgres://#{c['username']}:#{c['password']}@#{c['host']}:#{c['port']}/#{c['database']}")
+      ConfigHelper.get 'postgresql'
     end
   end
 

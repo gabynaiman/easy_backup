@@ -21,8 +21,7 @@ module EasyBackup
 
       def save(resource)
         Net::SFTP.start(host, username, :password => password) do |sftp|
-          #TODO: Crear las carpetas de forma recursiva
-          sftp.mkdir! folder
+          sftp.mkpath! folder
           sftp.upload! resource, "#{folder}/#{File.basename(resource)}"
         end
       end
