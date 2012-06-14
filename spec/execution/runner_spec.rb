@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'easy_backup'
 require 'JSON'
 require 'yaml'
 require 'sequel'
@@ -9,7 +8,6 @@ require 'net/sftp'
 include EasyBackup
 include EasyBackup::Adapter
 include EasyBackup::Adapter::Db
-include EasyBackup::Adapter::Frequency
 
 DATA_PATH = "#{File.dirname(__FILE__)}/../files/data"
 BACKUP_PATH = "#{ENV['tmp'].gsub('\\', '/')}/easy_backup/test/backups"

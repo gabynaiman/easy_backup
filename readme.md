@@ -1,4 +1,4 @@
-### DSL Example
+## DSL Example
 
 ``` rb
 backup :demo_backup do
@@ -27,9 +27,7 @@ backup :demo_backup do
     folder   "backups/#{Time.now.strftime('%Y%m%d%H%M%S')}"
   end
 
-  every Day do
-    at '03:00:00'
-  end
+  every 1.day at: '10pm'
 
 end
 ```

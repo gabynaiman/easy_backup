@@ -1,10 +1,8 @@
 require 'spec_helper'
-require 'easy_backup'
 
 include EasyBackup
 include EasyBackup::Adapter
 include EasyBackup::Adapter::Db
-include EasyBackup::Adapter::Frequency
 
 describe Configuration, '-> Specification' do
 
@@ -86,32 +84,6 @@ describe Configuration, '-> Specification' do
     config.storages.should have(2).items
     config.storages[0].folders[0].should eq 'c:/backup'
     config.storages[1].folders[0].should eq 'c:/other_backup'
-  end
-
-  it 'Execute every day at specific hour' do
-    config = Configuration.new
-
-    config.frequencies.should be_empty
-
-    config.every Day do
-      at '10'
-    end
-
-    config.every Day do
-      at '22:45:01'
-    end
-
-    config.frequencies.should have(2).items
-
-    config.frequencies[0].should be_a Day
-    config.frequencies[0].hour.should be 10
-    config.frequencies[0].minute.should be 0
-    config.frequencies[0].second.should be 0
-
-    config.frequencies[1].should be_a Day
-    config.frequencies[1].hour.should be 22
-    config.frequencies[1].minute.should be 45
-    config.frequencies[1].second.should be 1
   end
 
 end

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'easy_backup'
 
 include EasyBackup::Adapter::Db
 

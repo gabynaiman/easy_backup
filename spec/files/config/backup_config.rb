@@ -15,8 +15,4 @@ backup :test_backup do
     folder 'c:/backup'
   end
 
-  every Day do
-    at '22:30'
-  end
-
 end

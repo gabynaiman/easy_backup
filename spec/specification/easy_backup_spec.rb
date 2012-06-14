@@ -1,10 +1,8 @@
 require 'spec_helper'
-require 'easy_backup'
 
 include EasyBackup
 include EasyBackup::Adapter
 include EasyBackup::Adapter::Db
-include EasyBackup::Adapter::Frequency
 
 describe EasyBackup, '-> Specification' do
 
@@ -27,9 +25,6 @@ describe EasyBackup, '-> Specification' do
         folder 'c:/backup'
       end
 
-      every Day do
-        at '22:30'
-      end
     end
 
     EasyBackup.configurations.should have_key :test_backup
