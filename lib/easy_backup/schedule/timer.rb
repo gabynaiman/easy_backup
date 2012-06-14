@@ -2,12 +2,17 @@ module EasyBackup
   module Schedule
     class Timer
       attr_accessor :logger
+      attr_reader :running
 
       def initialize(interval, &block)
         @interval = interval
         @block = block if block_given?
         @running = false
         @logger = Logger.new $stdout
+      end
+
+      def on_tick(&block)
+        @block = block
       end
 
       def start

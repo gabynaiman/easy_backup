@@ -12,6 +12,7 @@ require 'easy_backup/adapter/db/postgre_sql'
 require 'easy_backup/extension/net_sftp_session'
 
 require 'easy_backup/schedule/timer'
+require 'easy_backup/schedule/cron'
 
 module EasyBackup
   include EasyBackup::Adapter
