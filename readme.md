@@ -27,7 +27,7 @@ backup :demo_backup do
     folder   "backups/#{Time.now.strftime('%Y%m%d%H%M%S')}"
   end
 
-  every 1.day at: '10pm'
+  every 1.day, from: 'today at 22:30'
 
 end
 ```

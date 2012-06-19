@@ -25,6 +25,7 @@ describe EasyBackup, '-> Specification' do
         folder 'c:/backup'
       end
 
+      every 1.day, from: 'today at 22:30'
     end
 
     EasyBackup.configurations.should have_key :test_backup

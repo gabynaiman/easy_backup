@@ -8,6 +8,7 @@ require 'easy_backup/runner'
 require 'easy_backup/adapter/file_system'
 require 'easy_backup/adapter/sftp'
 require 'easy_backup/adapter/db/postgre_sql'
+require 'easy_backup/adapter/frequency'
 
 require 'easy_backup/extension/net_sftp_session'
 
