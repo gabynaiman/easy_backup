@@ -23,5 +23,13 @@ module EasyBackup
       frequencies << Frequency.new(interval, options)
     end
 
+    def schedule(scheduler)
+      @frequencies.each do |f|
+        scheduler.every f.interval, from: f.from, to: f.to do
+          Runner.run self
+        end
+      end
+    end
+
   end
 end

@@ -7,9 +7,9 @@ module EasyBackup
         instance_eval &block if block_given?
       end
 
-      def every(time, options={}, &block)
+      def every(interval, options={}, &block)
         job = {
-            :time => time,
+            :interval => interval,
             :options => options,
             :block => block
         }
@@ -30,12 +30,12 @@ module EasyBackup
 
       def cron_next_run(job)
         if job[:last_cron]
-          job[:last_cron] = job[:last_cron] + job[:time]
+          job[:last_cron] = job[:last_cron] + job[:interval]
         else
           if job[:options][:from]
-            job[:last_cron] = job[:options][:from] + job[:time]
+            job[:last_cron] = job[:options][:from] + job[:interval]
           else
-            job[:last_cron] = Time.now + job[:time]
+            job[:last_cron] = Time.now + job[:interval]
           end
         end
 

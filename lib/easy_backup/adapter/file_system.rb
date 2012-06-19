@@ -23,7 +23,8 @@ module EasyBackup
       end
 
       def save(resource)
-        folders.each do |folder|
+        folders.each do |f|
+          folder = f.is_a?(Proc) ? f.call : f
           FileUtils.mkpath folder unless Dir.exist? folder
           if Dir.exist? resource
             FileUtils.cp_r resource, "#{folder}/#{File.basename(resource)}"
