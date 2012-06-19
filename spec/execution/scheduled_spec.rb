@@ -7,7 +7,7 @@ describe EasyBackup, '-> Scheduled run' do
 
   it 'Run scheduled backup' do
     test_path = "#{BACKUP_PATH}/#{Time.now.to_f}"
-
+    puts test_path
     backup = EasyBackup::Base.new 0.1 do
       config :test_backup do
         save FileSystem do

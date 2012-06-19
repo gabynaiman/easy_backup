@@ -26,6 +26,10 @@ module EasyBackup
         @cron.stop
       end
 
+      def running?
+        @cron.running?
+      end
+
       private
 
       def cron_next_run(job)

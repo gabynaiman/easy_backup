@@ -16,7 +16,7 @@ module EasyBackup
       end
 
       def folder(folder=nil)
-        folder ? @folder = folder : @folder
+        folder ? @folder = lambda { folder } : @folder.call
       end
 
       def save(resource)
