@@ -1,7 +1,7 @@
 ## DSL Example
 
 ``` rb
-backup :demo_backup do
+config :demo_backup do
 
   save PostgreSQL do
     host     'localhost'

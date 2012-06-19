@@ -1,4 +1,4 @@
-backup :test_backup do
+config :test_backup do
 
   save PostgreSQL do
     host 'localhost'
