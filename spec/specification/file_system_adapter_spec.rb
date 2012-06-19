@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup::Adapter
-
 describe FileSystem, '-> Specification' do
 
   it 'Append folders' do

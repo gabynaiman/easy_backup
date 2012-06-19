@@ -17,10 +17,8 @@ require 'easy_backup/schedule/timer'
 require 'easy_backup/schedule/cron'
 require 'easy_backup/schedule/scheduler'
 
+
 module EasyBackup
-  include EasyBackup::Adapter
-  include EasyBackup::Adapter::Db
-  include EasyBackup::Schedule
 
   def self.logger
     @@logger ||= Logger.new($stdout)
@@ -30,3 +28,8 @@ module EasyBackup
     @@logger = logger
   end
 end
+
+include EasyBackup
+include EasyBackup::Adapter
+include EasyBackup::Adapter::Db
+include EasyBackup::Schedule

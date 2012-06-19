@@ -1,10 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup
-include EasyBackup::Adapter
-include EasyBackup::Adapter::Db
-include EasyBackup::Schedule
-
 DATA_PATH = "#{File.dirname(__FILE__)}/../files/data"
 BACKUP_PATH = "#{ENV['tmp'].gsub('\\', '/')}/easy_backup/test/backups"
 

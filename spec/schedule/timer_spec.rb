@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup::Schedule
-
 describe Timer do
 
   it 'Execute block after each interval' do

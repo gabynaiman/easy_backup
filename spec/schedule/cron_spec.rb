@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup::Schedule
-
 describe Cron do
 
   it 'Execute block at specific moment' do

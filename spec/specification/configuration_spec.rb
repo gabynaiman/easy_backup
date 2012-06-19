@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup
-include EasyBackup::Adapter
-include EasyBackup::Adapter::Db
-
 describe Configuration, '-> Specification' do
 
   it 'Save file system' do

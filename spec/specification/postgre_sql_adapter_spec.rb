@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup::Adapter::Db
-
 describe PostgreSQL, '-> Specification' do
 
   it 'Specify database parameters' do

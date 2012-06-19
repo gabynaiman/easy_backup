@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup::Schedule
-
 describe Scheduler do
 
   it 'Execute task every 1 second' do

@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include EasyBackup::Adapter
-
 describe SFTP, '-> Specification' do
 
   it 'Specify sftp parameters' do
