@@ -13,6 +13,7 @@ require 'easy_backup/extension/net_sftp_session'
 
 require 'easy_backup/schedule/timer'
 require 'easy_backup/schedule/cron'
+require 'easy_backup/schedule/scheduler'
 
 module EasyBackup
   include EasyBackup::Adapter
