@@ -4,29 +4,15 @@ module EasyBackup
 
   class Base
 
-    def initialize(interval=1.minute, &block)
+    def initialize(interval=EasyBackup.interval, &block)
       @configurations = {}
-      instance_eval &block if block_given?
+      instance_eval &block
       @scheduler = Rufus::Scheduler.start_new frequency: interval
-      run
+      schedule
     end
 
     def [](name)
       @configurations[name]
-    end
-
-    def []=(name, value)
-      @configurations[name] = value
-    end
-
-    def config(name, &block)
-      self[name] = Configuration.new do
-        instance_eval &block
-      end
-    end
-
-    def load(config_file)
-      eval File.open(config_file, 'r') { |f| f.readlines.join("\n") }
     end
 
     def start
@@ -35,7 +21,17 @@ module EasyBackup
 
     private
 
-    def run
+    def []=(name, value)
+      @configurations[name] = value
+    end
+
+    def config(name=:default, &block)
+      self[name] = Configuration.new do
+        instance_eval &block
+      end
+    end
+
+    def schedule
       @configurations.each_value do |c|
         c.frequencies.each do |f|
           @scheduler.every f.interval, first_at: f.from do
@@ -44,7 +40,6 @@ module EasyBackup
         end
       end
     end
-
 
   end
 end

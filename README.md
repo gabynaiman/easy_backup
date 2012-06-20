@@ -1,7 +1,7 @@
 ## DSL Example
 
 ``` rb
-config :demo_backup do
+EasyBackup.config do
 
   save PostgreSQL do
     host     'localhost'
@@ -13,7 +13,7 @@ config :demo_backup do
 
   save FileSystem do
     folder 'c:/resources'
-    file 'c:/data/file.txt'
+    file   'c:/data/file.txt'
   end
 
   into FileSystem do

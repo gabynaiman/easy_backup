@@ -14,6 +14,10 @@ require 'easy_backup/adapter/frequency'
 require 'easy_backup/extension/net_sftp_session'
 
 
+include EasyBackup
+include EasyBackup::Adapter
+include EasyBackup::Adapter::Db
+
 module EasyBackup
 
   def self.logger
@@ -23,8 +27,25 @@ module EasyBackup
   def self.logger=(logger)
     @@logger = logger
   end
-end
 
-include EasyBackup
-include EasyBackup::Adapter
-include EasyBackup::Adapter::Db
+  def self.interval
+    @@interval ||= 1.minute
+  end
+
+  def self.interval=(interval)
+    @@interval = interval
+  end
+
+  def self.config(name=:default, &block)
+    Base.new do
+      config name, &block
+    end
+  end
+
+  def self.load(config_file)
+    Base.new do
+      eval File.open(config_file, 'r') { |f| f.readlines.join("\n") }
+    end
+  end
+
+end
