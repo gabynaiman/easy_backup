@@ -7,8 +7,8 @@ describe EasyBackup, '-> Scheduled run' do
 
   it 'Run scheduled backup' do
     test_path = "#{BACKUP_PATH}/#{Time.now.to_f}"
-    puts test_path
-    backup = EasyBackup::Base.new 0.1 do
+
+    EasyBackup::Base.new 0.5 do
       config :test_backup do
         save FileSystem do
           file "#{DATA_PATH}/txt/1/text1.txt"
@@ -16,15 +16,13 @@ describe EasyBackup, '-> Scheduled run' do
         into FileSystem do
           folder lambda { "#{test_path}/#{Time.now.strftime('%Y-%m-%d %H_%M_%S_%L')}" }
         end
-        every 0.5
+        every 0.5, from: 1.second.from_now
       end
     end
 
-    backup.start
-    sleep(2.1)
-    backup.stop
+    sleep(2)
 
-    Dir.glob("#{test_path}/*").should have(4).items
+    Dir.glob("#{test_path}/*").should have(2).items
 
     FileUtils.rm_rf test_path
   end

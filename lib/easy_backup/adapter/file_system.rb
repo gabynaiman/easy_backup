@@ -25,14 +25,14 @@ module EasyBackup
 
       def send_to(storages)
         (files | folders).each do |resource|
-          EasyBackup.logger.debug "[FileSystem] Sending resource #{resource}"
           storages.each { |s| s.save resource } if File.exist? resource
         end
       end
 
       def save(resource)
         folders.each do |folder|
-          EasyBackup.logger.debug "[FileSystem] Saving into #{folder}"
+          EasyBackup.logger.debug "[FileSystem] Saving #{resource}\n#{' '*15}into #{folder}"
+
           FileUtils.mkpath folder unless Dir.exist? folder
           if Dir.exist? resource
             FileUtils.cp_r resource, "#{folder}/#{File.basename(resource)}"

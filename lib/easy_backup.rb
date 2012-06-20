@@ -13,10 +13,6 @@ require 'easy_backup/adapter/frequency'
 
 require 'easy_backup/extension/net_sftp_session'
 
-require 'easy_backup/schedule/timer'
-require 'easy_backup/schedule/cron'
-require 'easy_backup/schedule/scheduler'
-
 
 module EasyBackup
 
@@ -32,4 +28,3 @@ end
 include EasyBackup
 include EasyBackup::Adapter
 include EasyBackup::Adapter::Db
-include EasyBackup::Schedule

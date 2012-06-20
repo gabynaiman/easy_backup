@@ -88,15 +88,13 @@ describe Configuration, '-> Specification' do
     config.frequencies.should be_empty
 
     config.every 1.day, from: 'today at 22:30'
-    config.every 1.week, from: 'today at 03:00', to: 'tomorrow at 00:00'
+    config.every 1.week, from: 'today at 03:00'
 
     config.frequencies.should have(2).items
     config.frequencies[0].interval.should eq 1.day
     config.frequencies[0].from.should eq Time.local(Time.now.year, Time.now.month, Time.now.day, 22, 30)
-    config.frequencies[0].to.should be_nil
     config.frequencies[1].interval.should eq 1.week
     config.frequencies[1].from.should eq Time.local(Time.now.year, Time.now.month, Time.now.day, 3)
-    config.frequencies[1].to.should eq Time.local(Time.now.year, Time.now.month, Time.now.day + 1)
   end
 
 end

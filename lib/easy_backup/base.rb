@@ -1,11 +1,14 @@
+require 'rufus-scheduler'
+
 module EasyBackup
 
   class Base
 
     def initialize(interval=1.minute, &block)
-      @scheduler = Scheduler.new interval
       @configurations = {}
       instance_eval &block if block_given?
+      @scheduler = Rufus::Scheduler.start_new frequency: interval
+      run
     end
 
     def [](name)
@@ -27,15 +30,21 @@ module EasyBackup
     end
 
     def start
-      @configurations.each_value do |c|
-        c.schedule @scheduler
-      end
-      @scheduler.start
+      @scheduler.join
     end
 
-    def stop
-      @scheduler.stop
+    private
+
+    def run
+      @configurations.each_value do |c|
+        c.frequencies.each do |f|
+          @scheduler.every f.interval, first_at: f.from do
+            Runner.run c
+          end
+        end
+      end
     end
+
 
   end
 end
