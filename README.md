@@ -19,7 +19,7 @@ EasyBackup.config do
   end
 
   into FileSystem do
-    folder "c:/backups/#{Time.now.strftime('%Y%m%d%H%M%S')}"
+    folder lambda { "c:/backups/#{Time.now.strftime('%Y%m%d%H%M%S')}" }
   end
 
   into SFTP do

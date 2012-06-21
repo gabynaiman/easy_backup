@@ -29,7 +29,15 @@ module EasyBackup
         end
 
         def dump_file(file_name=nil)
-          file_name ? @dump_file = file_name : (@dump_file || "#{database}_#{Time.now.strftime('%Y%m%d%H%M%S')}.sql")
+          if file_name
+            @dump_file = file_name
+          else
+            if @dump_file
+              @dump_file.is_a?(Proc) ? @dump_file.call : @dump_file
+            else
+              "#{database}_#{Time.now.strftime('%Y%m%d%H%M%S')}.sql"
+            end
+          end
         end
 
         def zip_file(file_name=nil)

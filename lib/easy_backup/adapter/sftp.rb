@@ -16,7 +16,11 @@ module EasyBackup
       end
 
       def folder(folder=nil)
-        folder ? @folder = lambda { folder } : @folder.call
+        if folder
+          @folder = folder
+        else
+          @folder.is_a?(Proc) ? @folder.call : @folder
+        end
       end
 
       def save(resource)
