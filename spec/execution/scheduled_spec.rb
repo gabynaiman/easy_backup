@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe EasyBackup, '-> Scheduled run' do
 
+  after :all do
+    FileUtils.rm_rf BACKUP_PATH
+  end
+
   it 'Run scheduled backup' do
     test_path = "#{BACKUP_PATH}/#{Time.now.to_f}"
 
@@ -20,8 +24,6 @@ describe EasyBackup, '-> Scheduled run' do
     sleep(2)
 
     Dir.glob("#{test_path}/*").should have(2).items
-
-    FileUtils.rm_rf test_path
   end
 
 end

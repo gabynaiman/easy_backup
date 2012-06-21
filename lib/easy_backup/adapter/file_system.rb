@@ -12,7 +12,7 @@ module EasyBackup
       end
 
       def folders
-        @folders.map{|f| f.is_a?(Proc) ? f.call : f}
+        @folders.map { |f| f.is_a?(Proc) ? f.call : f }
       end
 
       def file(file_name)
@@ -20,12 +20,41 @@ module EasyBackup
       end
 
       def files
-        @files.map{|f| f.is_a?(Proc) ? f.call : f}
+        @files.map { |f| f.is_a?(Proc) ? f.call : f }
+      end
+
+      def zip(file_name)
+        @zip_file = file_name
+      end
+
+      def zip_file
+        @zip_file.is_a?(Proc) ? @zip_file.call : @zip_file
       end
 
       def send_to(storages)
-        (files | folders).each do |resource|
-          storages.each { |s| s.save resource } if File.exist? resource
+        if zip_file
+          EasyBackup.logger.info "[FileSystem] Zip #{zip_path(zip_file)}"
+          FileUtils.mkpath File.dirname(zip_path(zip_file))
+          ZipFile.open(zip_path(zip_file), ZipFile::CREATE) do |zip|
+            (files | folders).each do |resource|
+              if Dir.exist? resource
+                EasyBackup.logger.info "#{' '*13}add #{resource}"
+                Dir["#{resource}/**/**"].each do |r|
+                  EasyBackup.logger.info "#{' '*13}add #{r}" unless Dir.exist? r
+                  zip.add "#{File.basename(resource)}/#{r.gsub("#{resource}/", '')}", r
+                end
+              else
+                EasyBackup.logger.info "#{' '*13}add #{resource}"
+                zip.add File.basename(resource), resource
+              end
+            end
+          end
+          storages.each { |s| s.save zip_path(zip_file) }
+          FileUtils.rm zip_path(zip_file)
+        else
+          (files | folders).each do |resource|
+            storages.each { |s| s.save resource } if File.exist? resource
+          end
         end
       end
 
@@ -40,6 +69,12 @@ module EasyBackup
             FileUtils.cp resource, "#{folder}/#{File.basename(resource)}"
           end
         end
+      end
+
+      private
+
+      def zip_path(file_name)
+        "#{EasyBackup.tmp_path}/zip/#{file_name}"
       end
 
     end

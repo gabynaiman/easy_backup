@@ -9,11 +9,13 @@ EasyBackup.config do
     database 'db_production'
     username 'user_prod'
     password 'password'
+    zip
   end
 
   save FileSystem do
     folder 'c:/resources'
     file   'c:/data/file.txt'
+    zip    'data.zip'
   end
 
   into FileSystem do

@@ -7,6 +7,10 @@ require 'net/sftp'
 
 describe Runner, '-> Execution' do
 
+  after :all do
+    FileUtils.rm_rf BACKUP_PATH
+  end
+
   it 'Backup a file to file system' do
     config = Configuration.new do
       save FileSystem do
@@ -24,8 +28,6 @@ describe Runner, '-> Execution' do
     data = File.open(file, 'r') { |f| JSON.parse f.readlines.join }
     data['id'].should be 1234
     data['name'].should eq 'sample'
-
-    FileUtils.rm_rf config.storages.first.folders.first
   end
 
   it 'Backup folder to file system' do
@@ -46,8 +48,32 @@ describe Runner, '-> Execution' do
       File.exist?(file).should be_true
       File.open(file, 'r') { |f| f.gets.should eq "Text file #{i}" }
     end
+  end
 
-    FileUtils.rm_rf config.storages.first.folders.first
+  it 'Backup file and folder zipped to file system' do
+    zip_file = "data_#{Time.now.strftime('%Y%m%d%H%M%S%L')}.zip"
+    backup_path = "#{BACKUP_PATH}/#{Time.now.strftime('%Y%m%d%H%M%S%L')}"
+
+    config = Configuration.new do
+      save FileSystem do
+        folder "#{DATA_PATH}/txt"
+        folder "#{DATA_PATH}/sample.json"
+        zip zip_file
+      end
+      into FileSystem do
+        folder backup_path
+      end
+    end
+
+    Runner.run config
+
+    File.exists?("#{backup_path}/#{zip_file}").should be_true
+
+    Zip::ZipFile.open("#{backup_path}/#{zip_file}") do |zip|
+      zip.find_entry('sample.json').should_not be_nil
+      zip.find_entry('txt/1/text1.txt').should_not be_nil
+      zip.find_entry('txt/2/text2.txt').should_not be_nil
+    end
   end
 
   it 'Backup PostgreSQL to file system' do
@@ -77,8 +103,6 @@ describe Runner, '-> Execution' do
     Zip::ZipFile.foreach(Dir["#{backup_path}/#{db['database']}_*.zip"].first) do |entry|
       entry.get_input_stream.read.should include 'PostgreSQL database dump'
     end
-
-    FileUtils.rm_rf backup_path
   end
 
   it 'Backup a file to sftp' do
