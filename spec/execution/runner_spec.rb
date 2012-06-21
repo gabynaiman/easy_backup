@@ -62,6 +62,7 @@ describe Runner, '-> Execution' do
         port db['port']
         username db['username']
         password db['password']
+        zip
       end
       into FileSystem do
         folder backup_path
