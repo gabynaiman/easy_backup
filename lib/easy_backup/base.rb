@@ -32,9 +32,10 @@ module EasyBackup
     end
 
     def schedule
-      @configurations.each_value do |c|
+      @configurations.each do |name, c|
         c.frequencies.each do |f|
           @scheduler.every f.interval, first_at: f.from do
+            EasyBackup.logger.info "[EasyBackup] Starting #{name} at #{Time.now}"
             Runner.run c
           end
         end

@@ -36,6 +36,14 @@ module EasyBackup
     @@interval = interval
   end
 
+  def self.tmp_path
+    @tmp_path ||= "#{ENV['tmp'].gsub('\\', '/')}/easy_backup"
+  end
+
+  def self.tmp_path=(path)
+    @tmp_path = path
+  end
+
   def self.config(name=:default, &block)
     Base.new do
       config name, &block

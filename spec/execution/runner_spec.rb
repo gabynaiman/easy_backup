@@ -5,9 +5,6 @@ require 'sequel'
 require 'zip/zip'
 require 'net/sftp'
 
-DATA_PATH = "#{File.dirname(__FILE__)}/../files/data"
-BACKUP_PATH = "#{ENV['tmp'].gsub('\\', '/')}/easy_backup/test/backups"
-
 describe Runner, '-> Execution' do
 
   it 'Backup a file to file system' do

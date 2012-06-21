@@ -21,6 +21,8 @@ module EasyBackup
 
       def save(resource)
         Net::SFTP.start(host, username, :password => password) do |sftp|
+          EasyBackup.logger.info "[SFTP] Saving #{resource}\n#{' '*9}into #{host} | #{username} | #{folder}"
+
           sftp.mkpath! folder
           sftp.upload! resource, "#{folder}/#{File.basename(resource)}"
         end

@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-DATA_PATH = "#{File.dirname(__FILE__)}/../files/data"
-BACKUP_PATH = "#{ENV['tmp'].gsub('\\', '/')}/easy_backup/test/backups"
-
 describe EasyBackup, '-> Scheduled run' do
 
   it 'Run scheduled backup' do
