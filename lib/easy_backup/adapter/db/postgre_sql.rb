@@ -49,13 +49,13 @@ module EasyBackup
         end
 
         def zip
-          zip_file "#{File.basename(dump_file, '.*')}.zip"
+          zip_file lambda { "#{File.basename(dump_file, '.*')}.zip" }
         end
 
         def send_to(storages)
           dump_file_name = path_to(dump_file)
           zip_file_name = path_to(zip_file)
-          
+
           FileUtils.mkpath File.dirname(dump_file_name) unless Dir.exist? File.dirname(dump_file_name)
 
           EasyBackup.logger.info "[PostgreSQL] Dump postgres://#{username}:*****@#{host}:#{port}/#{database}\n#{' '*15}to #{dump_file_name}"
@@ -64,9 +64,11 @@ module EasyBackup
             if t.value.success?
               if zip_file
                 EasyBackup.logger.info "#{(' '*14)}zip #{zip_file_name}"
-                ZipFile.open(zip_file_name, ZipFile::CREATE) { |zip| zip.add dump_file, dump_file_name }
+                ZipFile.open(zip_file_name, ZipFile::CREATE) do |zip|
+                  zip.add File.basename(dump_file_name), dump_file_name
+                end
               end
-              storages.each { |s| s.save path_to(zip_file ? zip_file : dump_file) }
+              storages.each { |s| s.save(zip_file ? zip_file_name : dump_file_name) }
             else
               EasyBackup.logger.error "[PostgreSQL] Error: #{e.readlines.join}"
             end
