@@ -41,7 +41,7 @@ module EasyBackup
             (files | folders).each do |resource|
               if Dir.exist? resource
                 EasyBackup.logger.info "#{' '*13}add #{resource}"
-                Dir["#{resource}/**/**"].each do |r|
+                Dir.glob("#{resource}/**/**", File::FNM_DOTMATCH).reject{|entry| entry.end_with? '/.'}.each do |r|
                   EasyBackup.logger.info "#{' '*13}add #{r}" unless Dir.exist? r
                   zip.add "#{File.basename(resource)}/#{r.gsub("#{resource}/", '')}", r
                 end
