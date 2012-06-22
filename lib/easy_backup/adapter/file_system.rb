@@ -33,9 +33,11 @@ module EasyBackup
 
       def send_to(storages)
         if zip_file
-          EasyBackup.logger.info "[FileSystem] Zip #{zip_path(zip_file)}"
-          FileUtils.mkpath File.dirname(zip_path(zip_file))
-          ZipFile.open(zip_path(zip_file), ZipFile::CREATE) do |zip|
+          zip_file_name = zip_path(zip_file)
+
+          EasyBackup.logger.info "[FileSystem] Zip #{zip_file_name}"
+          FileUtils.mkpath File.dirname(zip_file_name)
+          ZipFile.open(zip_file_name, ZipFile::CREATE) do |zip|
             (files | folders).each do |resource|
               if Dir.exist? resource
                 EasyBackup.logger.info "#{' '*13}add #{resource}"
@@ -49,8 +51,8 @@ module EasyBackup
               end
             end
           end
-          storages.each { |s| s.save zip_path(zip_file) }
-          FileUtils.rm zip_path(zip_file)
+          storages.each { |s| s.save zip_file_name }
+          FileUtils.rm zip_file_name
         else
           (files | folders).each do |resource|
             storages.each { |s| s.save resource } if File.exist? resource
