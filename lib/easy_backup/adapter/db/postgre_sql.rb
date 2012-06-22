@@ -41,7 +41,11 @@ module EasyBackup
         end
 
         def zip_file(file_name=nil)
-          file_name ? @zip_file = file_name : @zip_file
+          if file_name
+            @zip_file = file_name
+          else
+            @zip_file.is_a?(Proc) ? @zip_file.call : @zip_file
+          end
         end
 
         def zip
@@ -49,15 +53,18 @@ module EasyBackup
         end
 
         def send_to(storages)
-          FileUtils.mkpath File.dirname(path_to(dump_file)) unless Dir.exist? File.dirname(path_to(dump_file))
+          dump_file_name = path_to(dump_file)
+          zip_file_name = path_to(zip_file)
+          
+          FileUtils.mkpath File.dirname(dump_file_name) unless Dir.exist? File.dirname(dump_file_name)
 
-          EasyBackup.logger.info "[PostgreSQL] Dump postgres://#{username}:*****@#{host}:#{port}/#{database}\n#{' '*15}to #{path_to(dump_file)}"
+          EasyBackup.logger.info "[PostgreSQL] Dump postgres://#{username}:*****@#{host}:#{port}/#{database}\n#{' '*15}to #{dump_file_name}"
 
-          Open3.popen3 "pg_dump -h #{host} -p #{port} -U #{username} #{database} > #{path_to(dump_file)}" do |i, o, e, t|
+          Open3.popen3 "pg_dump -h #{host} -p #{port} -U #{username} #{database} > #{dump_file_name}" do |i, o, e, t|
             if t.value.success?
               if zip_file
-                EasyBackup.logger.info "#{(' '*14)}zip #{path_to(zip_file)}"
-                ZipFile.open(path_to(zip_file), ZipFile::CREATE) { |zip| zip.add dump_file, path_to(dump_file) }
+                EasyBackup.logger.info "#{(' '*14)}zip #{zip_file_name}"
+                ZipFile.open(zip_file_name, ZipFile::CREATE) { |zip| zip.add dump_file, dump_file_name }
               end
               storages.each { |s| s.save path_to(zip_file ? zip_file : dump_file) }
             else
@@ -65,8 +72,8 @@ module EasyBackup
             end
           end
 
-          FileUtils.rm path_to(dump_file) if File.exist? path_to(dump_file)
-          FileUtils.rm path_to(zip_file) if zip_file && File.exist?(path_to(zip_file))
+          FileUtils.rm dump_file_name if File.exist? dump_file_name
+          FileUtils.rm zip_file_name if zip_file && File.exist?(zip_file_name)
         end
 
         private
