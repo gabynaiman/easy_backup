@@ -40,13 +40,13 @@ module EasyBackup
           ZipFile.open(zip_file_name, ZipFile::CREATE) do |zip|
             (files | folders).each do |resource|
               if Dir.exist? resource
-                EasyBackup.logger.info "#{' '*13}add #{resource}"
-                Dir.glob("#{resource}/**/**", File::FNM_DOTMATCH).reject{|entry| entry.end_with? '/.'}.each do |r|
-                  EasyBackup.logger.info "#{' '*13}add #{r}" unless Dir.exist? r
+                EasyBackup.logger.debug "#{' '*13}add #{resource}"
+                Dir.glob("#{resource}/**/**", File::FNM_DOTMATCH).reject{|entry| entry =~ /\/[\.]+\z/}.each do |r|
+                  EasyBackup.logger.debug "#{' '*13}add #{r}" unless Dir.exist? r
                   zip.add "#{File.basename(resource)}/#{r.gsub("#{resource}/", '')}", r
                 end
               else
-                EasyBackup.logger.info "#{' '*13}add #{resource}"
+                EasyBackup.logger.debug "#{' '*13}add #{resource}"
                 zip.add File.basename(resource), resource
               end
             end
