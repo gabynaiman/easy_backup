@@ -26,7 +26,7 @@ describe Runner, '-> Execution' do
     file = "#{config.storages.first.folders.first}/sample.json"
     File.exist?(file).should be_true
     data = File.open(file, 'r') { |f| JSON.parse f.readlines.join }
-    data['id'].should be 1234
+    data['id'].should eq 1234
     data['name'].should eq 'sample'
   end
 
