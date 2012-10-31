@@ -1,59 +1,30 @@
 require 'logger'
-require 'active_support/all'
+require 'zip/zip'
+require 'net/sftp'
+require 'open3'
+require 'rufus-scheduler'
 
-require 'easy_backup/version'
-require 'easy_backup/base'
 require 'easy_backup/configuration'
-require 'easy_backup/frequency'
-require 'easy_backup/runner'
+require 'easy_backup/specification'
 
-require 'easy_backup/adapter/file_system'
-require 'easy_backup/adapter/sftp'
-require 'easy_backup/adapter/db/postgre_sql'
+require 'easy_backup/resources/file_system'
+require 'easy_backup/resources/sftp'
+require 'easy_backup/resources/postgres'
 
 require 'easy_backup/extension/net_sftp_session'
 
-
-include EasyBackup
-include EasyBackup::Adapter
-include EasyBackup::Adapter::Db
-
 module EasyBackup
 
-  def self.logger
-    @@logger ||= Logger.new($stdout)
+  def self.configuration
+    @@configuration ||= Configuration.new
   end
 
-  def self.logger=(logger)
-    @@logger = logger
+  def self.configure
+    yield(configuration)
   end
 
-  def self.interval
-    @@interval ||= 1.minute
-  end
-
-  def self.interval=(interval)
-    @@interval = interval
-  end
-
-  def self.tmp_path
-    @tmp_path ||= "#{ENV['tmp'].gsub('\\', '/')}/easy_backup"
-  end
-
-  def self.tmp_path=(path)
-    @tmp_path = path
-  end
-
-  def self.config(name=:default, &block)
-    Base.new do
-      config name, &block
-    end
-  end
-
-  def self.load(config_file)
-    Base.new do
-      eval File.open(config_file, 'r') { |f| f.readlines.join("\n") }
-    end
+  def scheduler
+    @@scheduler ||= Rufus::Scheduler.start_new
   end
 
 end

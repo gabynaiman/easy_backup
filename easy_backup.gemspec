@@ -3,15 +3,15 @@ $:.push File.expand_path("../lib", __FILE__)
 require "easy_backup/version"
 
 Gem::Specification.new do |s|
-  s.name        = "easy_backup"
+  s.name        = 'easy_backup'
   s.version     = EasyBackup::VERSION
-  s.authors     = ["Gabriel Naiman"]
-  s.email       = ["gabynaiman@gmail.com"]
-  s.homepage    = "https://github.com/gabynaiman/easy_backup"
-  s.summary     = "Easy DSL to program backups"
-  s.description = "Easy DSL to program backups"
+  s.authors     = ['Gabriel Naiman']
+  s.email       = ['gabynaiman@gmail.com']
+  s.homepage    = 'https://github.com/gabynaiman/easy_backup'
+  s.summary     = 'Simple DSL to program backups'
+  s.description = 'Simple DSL to program backups'
 
-  s.rubyforge_project = "easy_backup"
+  s.rubyforge_project = 'easy_backup'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -20,15 +20,13 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rubyzip'
   s.add_dependency 'net-sftp'
-  s.add_dependency 'activesupport', '>= 3.0.0'
-  s.add_dependency 'i18n'
-  s.add_dependency 'chronic'
-  s.add_dependency 'json'
   s.add_dependency 'rufus-scheduler'
-  s.add_dependency 'jruby-openssl' if RUBY_ENGINE == 'jruby'
-  s.add_dependency 'jruby-pageant' if RUBY_ENGINE == 'jruby'
+  #s.add_dependency 'activesupport', '>= 3.0.0'
+  #s.add_dependency 'i18n'
+  #s.add_dependency 'chronic'
 
+  s.add_development_dependency 'json'
   s.add_development_dependency 'sequel'
-  s.add_development_dependency 'pg' if RUBY_ENGINE == 'ruby'
-  s.add_development_dependency "rspec"
+  s.add_development_dependency 'pg'
+  s.add_development_dependency 'rspec'
 end

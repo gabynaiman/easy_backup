@@ -1,4 +1,4 @@
-module PostgreSQLHelper
+module PostgresHelper
 
   def self.configuration
     if block_given?

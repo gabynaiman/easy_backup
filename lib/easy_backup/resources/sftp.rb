@@ -1,8 +1,11 @@
-require 'net/sftp'
-
 module EasyBackup
-  module Adapter
+  module Resources
     class SFTP
+
+      def initialize(&block)
+        instance_eval &block if block_given?
+      end
+
       def host(host=nil)
         host ? @host = host : @host
       end
@@ -26,7 +29,7 @@ module EasyBackup
       def save(resource)
         Net::SFTP.start(host, username, :password => password) do |sftp|
           sftp_folder = folder
-          EasyBackup.logger.info "[SFTP] Saving #{resource}\n#{' '*9}into #{host} | #{username} | #{sftp_folder}"
+          EasyBackup.configuration.logger.info "[EasyBackup] Saving #{resource} into #{host} | #{username} | #{sftp_folder}"
 
           sftp.mkpath! sftp_folder, :progress => SFTPHandler.new
           sftp.upload! resource, "#{sftp_folder}/#{File.basename(resource)}", :progress => SFTPHandler.new
@@ -36,24 +39,25 @@ module EasyBackup
 
     class SFTPHandler
       def on_open(uploader, file)
-        EasyBackup.logger.info "#{' '*9}starting upload: #{file.local} -> #{file.remote} (#{file.size} bytes)"
+        EasyBackup.configuration.logger.debug "[EasyBackup] starting upload: #{file.local} -> #{file.remote} (#{file.size} bytes)"
       end
 
       def on_put(uploader, file, offset, data)
-        EasyBackup.logger.info "#{' '*9}#{data.length} bytes to #{file.remote} starting at #{offset}"
+        EasyBackup.configuration.logger.debug "[EasyBackup] #{data.length} bytes to #{file.remote} starting at #{offset}"
       end
 
       def on_close(uploader, file)
-        EasyBackup.logger.info "#{' '*9}finished with #{file.remote}"
+        EasyBackup.configuration.logger.debug "[EasyBackup] finished with #{file.remote}"
       end
 
       def on_mkdir(uploader, path)
-        EasyBackup.logger.info "#{' '*9}creating directory #{path}"
+        EasyBackup.configuration.logger.debug "[EasyBackup] creating directory #{path}"
       end
 
       def on_finish(uploader)
-        EasyBackup.logger.info "#{' '*9}all done!"
+        EasyBackup.configuration.logger.debug "[EasyBackup] all done!"
       end
     end
+
   end
 end
