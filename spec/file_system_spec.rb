@@ -131,6 +131,24 @@ describe FileSystem do
       storage.received.should eq [fs.zip_file]
     end
 
+    it 'Zipped with lambda expression' do
+      sample_file = "#{DATA_PATH}/sample.json"
+      sample_folder = "#{DATA_PATH}/txt"
+
+      fs = FileSystem.new do
+        file sample_file
+        folder sample_folder
+        zip lambda { "sample_#{Time.now.strftime('%Y%m%d%H%M%S')}.zip" }
+      end
+
+      storage = FakeStorage.new
+
+      fs.send_to storage
+
+      sleep 1
+
+      storage.received.should eq [fs.zip_file]
+    end
   end
 
 end

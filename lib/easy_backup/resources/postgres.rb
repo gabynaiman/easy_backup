@@ -29,36 +29,30 @@ module EasyBackup
 
       def dump_file(file_name=nil)
         if file_name
-          @dump_file = file_name
+          @dump = file_name
         else
-          if @dump_file
-            path_to(@dump_file.is_a?(Proc) ? @dump_file.call : @dump_file)
-          else
-            path_to "#{database}_#{Time.now.strftime('%Y%m%d%H%M%S')}.sql"
-          end
+          @dump_file || update_dump_file
         end
       end
 
-      def zip_file(file_name=nil)
-        if file_name
-          @zip_file = file_name
-        else
-          path_to(@zip_file.is_a?(Proc) ? @zip_file.call : @zip_file)
-        end
+      def zip_file
+        @zip_file || update_zip_file
       end
 
       def zip
-        zip_file lambda { "#{File.basename(dump_file, '.*')}.zip" }
+        @zip = lambda { "#{File.basename(dump_file, '.*')}.zip" }
       end
 
       def send_to(*storages)
+        update_dump_file
+
         FileUtils.mkpath File.dirname(dump_file) unless Dir.exist? File.dirname(dump_file)
 
         EasyBackup.configuration.logger.info "[EasyBackup] Dump postgres://#{username}:*****@#{host}:#{port}/#{database} to #{dump_file}"
 
         Open3.popen3 "pg_dump -h #{host} -p #{port} -U #{username} #{database} > #{dump_file}" do |i, o, e, t|
           if t.value.success?
-            if zip_file
+            if update_zip_file
               EasyBackup.configuration.logger.info "[EasyBackup] Zip #{dump_file} to #{zip_file}"
               ZipFile.open(zip_file, ZipFile::CREATE) do |zip|
                 zip.add File.basename(dump_file), dump_file
@@ -75,6 +69,19 @@ module EasyBackup
       end
 
       private
+
+      def update_dump_file
+        if @dump
+          @dump_file = path_to(@dump.is_a?(Proc) ? @dump.call : @dump)
+        else
+          @dump_file = path_to "#{database}_#{Time.now.strftime('%Y%m%d%H%M%S')}.sql"
+        end
+      end
+
+      def update_zip_file
+        return nil unless @zip
+        @zip_file = path_to(@zip.call)
+      end
 
       def path_to(file_name)
         return nil unless file_name

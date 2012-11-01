@@ -66,6 +66,26 @@ describe Postgres do
       storage.received.should eq ["#{EasyBackup.configuration.tmp_path}/pg_dump/backup.sql"]
     end
 
+    it 'Dump with lambda expression' do
+      db = PostgresHelper.configuration
+
+      pg = Postgres.new do
+        host db['host']
+        database db['database']
+        port db['port']
+        username db['username']
+        password db['password']
+      end
+
+      storage = FakeStorage.new
+
+      pg.send_to storage
+
+      sleep 1
+
+      storage.received.should eq [pg.dump_file]
+    end
+
     it 'Zip after dump' do
       db = PostgresHelper.configuration
 
@@ -84,6 +104,27 @@ describe Postgres do
       pg.send_to storage
 
       storage.received.should eq ["#{EasyBackup.configuration.tmp_path}/pg_dump/backup.zip"]
+    end
+
+    it 'Zip with lambda expression' do
+      db = PostgresHelper.configuration
+
+      pg = Postgres.new do
+        host db['host']
+        database db['database']
+        port db['port']
+        username db['username']
+        password db['password']
+        zip
+      end
+
+      storage = FakeStorage.new
+
+      pg.send_to storage
+
+      sleep 1
+
+      storage.received.should eq [pg.zip_file]
     end
 
   end

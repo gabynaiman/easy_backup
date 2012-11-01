@@ -26,11 +26,11 @@ module EasyBackup
       end
 
       def zip(file_name)
-        @zip_file = file_name
+        @zip = file_name
       end
 
       def zip_file
-        zip_path(@zip_file.is_a?(Proc) ? @zip_file.call : @zip_file)
+        @zip_file || update_zip_file
       end
 
       def save(resource)
@@ -47,7 +47,7 @@ module EasyBackup
       end
 
       def send_to(*storages)
-        if zip_file
+        if update_zip_file
           EasyBackup.configuration.logger.info "[EasyBackup] Zip #{zip_file}"
           FileUtils.mkpath File.dirname(zip_file) unless Dir.exist? File.dirname(zip_file)
           ZipFile.open(zip_file, ZipFile::CREATE) do |zip|
@@ -75,9 +75,9 @@ module EasyBackup
 
       private
 
-      def zip_path(file_name)
-        return nil unless file_name
-        "#{EasyBackup.configuration.tmp_path}/zip/#{file_name}"
+      def update_zip_file
+        return nil unless @zip
+        @zip_file = "#{EasyBackup.configuration.tmp_path}/zip/#{@zip.is_a?(Proc) ? @zip.call : @zip}"
       end
 
     end
