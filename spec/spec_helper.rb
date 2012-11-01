@@ -3,7 +3,6 @@ require 'sequel'
 require 'json'
 
 include EasyBackup
-include EasyBackup::Resources
 
 DATA_PATH = "#{File.dirname(__FILE__)}/files/data"
 
