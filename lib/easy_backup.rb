@@ -3,6 +3,7 @@ require 'zip/zip'
 require 'net/sftp'
 require 'open3'
 require 'rufus-scheduler'
+require 'chronic'
 
 require 'easy_backup/configuration'
 require 'easy_backup/specification'

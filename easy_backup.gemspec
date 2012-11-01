@@ -21,9 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rubyzip'
   s.add_dependency 'net-sftp'
   s.add_dependency 'rufus-scheduler'
-  #s.add_dependency 'activesupport', '>= 3.0.0'
-  #s.add_dependency 'i18n'
-  #s.add_dependency 'chronic'
+  s.add_dependency 'chronic'
 
   s.add_development_dependency 'json'
   s.add_development_dependency 'sequel'
