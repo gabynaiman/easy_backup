@@ -1,5 +1,7 @@
 # EasyBackup
 
+[![Gem Version](https://badge.fury.io/rb/easy_backup.png)](https://rubygems.org/gems/easy_backup)
+
 Simple DSL to program backups
 
 ## Installation
